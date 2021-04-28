@@ -1,0 +1,11 @@
+.table-box {
+    height: 90vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table-container {
+    width: 50rem;
+}
