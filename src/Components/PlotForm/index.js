@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
-import {Alert, Button, Form} from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 import './plotForm.css'
-import {Link} from "react-router-dom";
+import axios from "axios";
 
 const PlotForm = () => {
     const [newPlot, setNewPlot] = useState({});
-    const [showAlert, setShowAlert] = useState(false);
 
     const handleInputChange = (event) => {
         let eventData = event;
@@ -13,6 +12,11 @@ const PlotForm = () => {
             setNewPlot({
                 ...newPlot,
                 [event.target.name]: event.target.checked
+            });
+        } else if(eventData.target.type === "number"){
+            setNewPlot({
+                ...newPlot,
+                [event.target.name]: Number(event.target.value)
             })
         } else {
             setNewPlot({
@@ -24,9 +28,17 @@ const PlotForm = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        axios.post('http://ec2-18-212-189-186.compute-1.amazonaws.com/plot',
+            newPlot,
+            { headers: {
+                'Content-Type': 'application/json'
+            }})
+            .then((res) => {
+                console.log(res);
+                document.getElementById("create-plot-form").reset();
+                setNewPlot({});
+            });
         console.log(newPlot);
-        document.getElementById("create-plot-form").reset();
-        setNewPlot({});
     }
 
     return (
@@ -54,7 +66,7 @@ const PlotForm = () => {
                     </div>
                     <Form.Group className={"form-group"} controlId="formBasicWorkers">
                         <Form.Label>Num. of Workers</Form.Label>
-                        <Form.Control type="number" placeholder="Enter number of workers" name={"numWorkers"} onChange={handleInputChange}/>
+                        <Form.Control type="number" placeholder="Enter number of workers" name={"num_workers"} onChange={handleInputChange}/>
                     </Form.Group>
                     <Form.Group  className={"form-group"} controlId="formBasicCheckbox">
                         <Form.Check type="checkbox" label="Available" name={"available"} onChange={handleInputChange}/>
@@ -65,9 +77,6 @@ const PlotForm = () => {
                         </Button>
                     </div>
                 </Form>
-                <Alert show={showAlert} variant={"success"}>
-                    Plot saved Successfully!
-                </Alert>
             </div>
         </div>
 
