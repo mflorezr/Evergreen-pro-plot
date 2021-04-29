@@ -39,7 +39,7 @@ phases:
       # - command
   post_build:
     commands:
-      - npm run start
+      - npm install
 
       # - mv target/protobootapp-0.0.1-SNAPSHOT.jar root.jar
       # - command
